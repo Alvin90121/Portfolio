@@ -1,8 +1,5 @@
 ---
 
-## 2. `docs/01-infrastructure-setup.md`
-
-This documents the Proxmox VM you created.
 
 ```markdown
 # Infrastructure Setup
