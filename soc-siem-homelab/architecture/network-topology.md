@@ -2,17 +2,17 @@
 
 ## Overview
 
-The SOC homelab runs inside my existing Proxmox VE environment.
+I built the SOC homelab inside my existing Proxmox VE environment.
 
-A dedicated Wazuh server is used as the central SIEM platform, while separate virtual machines act as monitored endpoints.
+I use a dedicated virtual machine for Wazuh so that my SIEM is separated from my other services and lab systems.
 
 The current environment contains:
 
-- Proxmox VE as the virtualisation platform
-- `soc-siem` as the central Wazuh server
-- `ubuntu-lab` as the first monitored Linux endpoint
-- Wazuh Agent for endpoint telemetry collection
-- Wazuh Dashboard for alert analysis and investigation
+- Proxmox VE as my virtualisation platform;
+- `soc-siem` as my central Wazuh server;
+- `ubuntu-lab` as my first monitored Linux endpoint;
+- Wazuh Agent for endpoint telemetry;
+- Wazuh Dashboard for alert analysis and investigation.
 
 ## Current Architecture
 
@@ -30,7 +30,6 @@ The current environment contains:
                        +-------------+
                               |
                 +-------------+-------------+
-                |                           |
                 |                           |
                 v                           v
         +---------------+           +---------------+
@@ -52,7 +51,6 @@ The current environment contains:
         |  Wazuh Dashboard |
         +------------------+
                 |
-                |
                 v
         Analyst Web Browser
 ```
@@ -62,52 +60,50 @@ The current environment contains:
 | Component | Address | Purpose |
 |---|---|---|
 | eero Router | `192.168.4.1` | Default gateway |
-| Proxmox VE | Home network | Virtualisation host |
-| soc-siem | `192.168.7.70/22` | Wazuh SIEM server |
+| Proxmox VE | Home network | Hosts my lab systems |
+| soc-siem | `192.168.7.70/22` | Central Wazuh SIEM |
 | ubuntu-lab | `192.168.7.164/22` | Monitored Linux endpoint |
 
 ## SIEM Communication
 
-The `ubuntu-lab` virtual machine runs the Wazuh Agent.
+I installed the Wazuh Agent on `ubuntu-lab`.
 
 The agent collects security telemetry from the endpoint and sends it to the Wazuh Manager running on `soc-siem`.
 
-Collected information includes:
+The telemetry includes information such as:
 
-- Linux system events
-- authentication activity
-- journald logs
-- package information
-- file integrity monitoring data
-- endpoint inventory information
+- Linux system events;
+- authentication activity;
+- journald logs;
+- package information;
+- file integrity monitoring data;
+- endpoint inventory information.
 
 The Wazuh Manager analyses incoming events against its ruleset.
 
-Matching security events are then indexed and made available through the Wazuh Dashboard for investigation.
+When an event matches a rule, Wazuh indexes the alert and makes it available through the dashboard for investigation.
 
 ## Analyst Access
 
-The Wazuh Dashboard is accessed through HTTPS from a workstation on the local network.
+I access the Wazuh Dashboard from a web browser on my local network.
 
 ```text
 https://192.168.7.70
 ```
 
-The dashboard provides access to:
+I use the dashboard to review:
 
-- endpoint status
-- security alerts
-- threat hunting
-- MITRE ATT&CK mappings
-- vulnerability information
-- file integrity monitoring
-- security configuration information
+- endpoint status;
+- security alerts;
+- threat hunting data;
+- MITRE ATT&CK mappings;
+- vulnerability information;
+- file integrity monitoring;
+- security configuration information.
 
 ## Future Architecture
 
-The lab will be expanded to include additional endpoints and security telemetry sources.
-
-Planned additions include:
+I plan to expand the environment by adding a Windows endpoint and additional telemetry sources.
 
 ```text
                        soc-siem
@@ -121,10 +117,10 @@ Planned additions include:
                          Sysmon
 ```
 
-The Windows endpoint will provide additional telemetry using:
+For the Windows endpoint, I plan to use:
 
 - Wazuh Agent
 - Windows Event Logs
 - Microsoft Sysmon
 
-This will allow the lab to support more realistic SOC detection and investigation scenarios.
+This will allow me to investigate a wider range of endpoint activity and create more realistic SOC scenarios.
