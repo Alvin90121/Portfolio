@@ -2,35 +2,50 @@
 
 ## Overview
 
-The SOC homelab is hosted on a Dell OptiPlex running Proxmox VE.
+I built the SOC lab on my existing Dell OptiPlex running Proxmox VE.
 
-A dedicated virtual machine was created specifically for the Wazuh SIEM environment rather than installing the SIEM on one of the existing application servers.
+Because the Proxmox host already runs several workloads, I first checked its available memory and storage before creating another virtual machine.
 
-Separating the SIEM from other workloads provides clearer resource allocation and makes the environment easier to manage and troubleshoot.
+I chose to deploy Wazuh on a dedicated VM rather than installing it alongside an existing service. This keeps my SIEM environment separate and makes resource management and troubleshooting easier.
 
 ## Proxmox Host
 
-The Proxmox host contains multiple existing workloads including:
+My Proxmox host already runs systems including:
 
 - Jellyfin
-- Docker-host
-- Ubuntu-Lab
-- SOC-SIEM
+- docker-host
+- ubuntu-lab
 
-Before deploying Wazuh, the available system resources were checked to confirm that the host had enough memory and storage available.
+Before deploying Wazuh, I checked the available memory using:
 
-The Proxmox host had approximately:
+```bash
+free -h
+```
+
+At the time of deployment, the host had approximately:
 
 ```text
 15 GiB total RAM
 11 GiB available RAM
 ```
 
-Storage availability was also verified before creating the new virtual machine.
+I also checked the Proxmox storage pools using:
+
+```bash
+pvesm status
+```
+
+This helped me confirm that enough resources were available for the new SIEM VM.
 
 ## SIEM Virtual Machine
 
-A dedicated virtual machine called `soc-siem` was created.
+I created a dedicated virtual machine called:
+
+```text
+soc-siem
+```
+
+I configured it with the following resources:
 
 | Setting | Value |
 |---|---|
@@ -46,47 +61,45 @@ A dedicated virtual machine called `soc-siem` was created.
 | Static IP | `192.168.7.70/22` |
 | Gateway | `192.168.4.1` |
 
-The VM was configured with CPU type `host` so that the guest operating system could use the processor features available on the physical Proxmox host.
+I selected the `host` CPU type so the VM could use the processor features available on the physical Proxmox host.
 
 ## Evidence
 
-The following screenshot shows the virtual machine configuration inside Proxmox.
+The screenshot below shows the virtual machine configuration in Proxmox.
 
 ![Proxmox SIEM VM](../screenshots/01-soc-siem-proxmox-vm.png)
 
 ## Ubuntu Installation
 
-Ubuntu Server 24.04 LTS was installed on the new virtual machine.
+I installed Ubuntu Server 24.04 LTS on the new VM.
 
-The system hostname was configured as:
+I configured the hostname as:
 
 ```text
 soc-siem
 ```
 
-OpenSSH Server was also installed to allow the server to be administered remotely.
+I also installed OpenSSH Server so I could manage the system remotely rather than relying only on the Proxmox console.
 
 ## Storage Issue
 
-After installation, the virtual disk had been configured as 50 GB inside Proxmox.
-
-However, checking the Ubuntu filesystem using:
+After installing Ubuntu, I checked the available filesystem space using:
 
 ```bash
 df -h
 ```
 
-showed that the root filesystem was only approximately:
+Although the Proxmox virtual disk was configured as 50 GB, I noticed that the root filesystem was only approximately:
 
 ```text
 24 GB
 ```
 
-This indicated that the entire virtual disk had not been allocated to the root logical volume.
+This showed that Ubuntu had not allocated the entire virtual disk to the root logical volume.
 
 ## LVM Investigation
 
-The available LVM space was checked using:
+I checked the volume group using:
 
 ```bash
 sudo vgs
@@ -98,25 +111,25 @@ The output showed approximately:
 24 GB VFree
 ```
 
-This confirmed that around half of the virtual disk was still available inside the volume group.
+This confirmed that around half of the virtual disk was available but had not yet been assigned to the root logical volume.
 
 ## LVM Expansion
 
-The root logical volume was expanded using:
+I expanded the root logical volume using:
 
 ```bash
 sudo lvextend -l +100%FREE -r /dev/ubuntu-vg/ubuntu-lv
 ```
 
-The `-r` option automatically resized the filesystem after extending the logical volume.
+The `-r` option also resized the filesystem.
 
-The final filesystem size was verified using:
+I then verified the change using:
 
 ```bash
 df -h /
 ```
 
-The root filesystem increased to approximately:
+The usable root filesystem increased to approximately:
 
 ```text
 48 GB
@@ -128,31 +141,31 @@ with around:
 39 GB
 ```
 
-available before the Wazuh installation.
+free before installing Wazuh.
 
 ## Static Networking
 
-The SIEM server originally received a DHCP address:
+Initially, the VM received the DHCP address:
 
 ```text
 192.168.7.202
 ```
 
-A SIEM server should have a stable network address because monitored endpoints need a consistent address for communication.
+Because monitored endpoints need a reliable destination for their telemetry, I decided to give the SIEM server a static IP address.
 
-The server was therefore configured with the static IP:
+I configured:
 
 ```text
 192.168.7.70/22
 ```
 
-The default gateway was configured as:
+with the default gateway:
 
 ```text
 192.168.4.1
 ```
 
-The network interface used by Ubuntu was:
+The Ubuntu network interface was:
 
 ```text
 ens18
@@ -160,31 +173,31 @@ ens18
 
 ## Connectivity Testing
 
-After applying the static network configuration, connectivity was tested.
+After changing the networking configuration, I tested each part of the connection.
 
-The local gateway was tested using:
+I tested access to the local gateway:
 
 ```bash
 ping -c 3 192.168.4.1
 ```
 
-Internet connectivity was tested using:
+I tested internet connectivity:
 
 ```bash
 ping -c 3 1.1.1.1
 ```
 
-DNS resolution was tested using:
+I tested DNS resolution:
 
 ```bash
 getent hosts packages.wazuh.com
 ```
 
-All tests completed successfully.
+All three tests completed successfully.
 
-## Final SIEM Infrastructure
+## Final Configuration
 
-At the end of the infrastructure stage, the SIEM server had:
+At the end of the infrastructure stage, my SIEM VM had the following configuration:
 
 ```text
 Hostname:    soc-siem
@@ -195,17 +208,17 @@ Memory:      8 GB
 Storage:     approximately 48 GB usable root filesystem
 ```
 
-## Skills Demonstrated
+## What I Learned
 
-This stage of the project demonstrated practical experience with:
+This stage gave me practical experience with:
 
-- Proxmox VE
-- virtual machine provisioning
-- Ubuntu Server
-- Linux networking
-- static IP configuration
-- Linux LVM
-- filesystem expansion
-- SSH administration
-- network troubleshooting
-- infrastructure planning
+- Proxmox VM provisioning;
+- Ubuntu Server installation;
+- Linux LVM;
+- filesystem expansion;
+- static IP configuration;
+- Linux networking;
+- SSH administration;
+- infrastructure troubleshooting.
+
+One important lesson was that the virtual disk size shown by the hypervisor does not necessarily equal the usable filesystem capacity available inside the guest operating system.
