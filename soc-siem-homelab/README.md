@@ -81,6 +81,18 @@ I classified the event as:
 
 [Read the full investigation](investigations/01-invalid-ssh-login.md)
 
+### Investigation 02 — SSH Brute-Force Detection
+
+I generated repeated failed SSH authentication events against my monitored Linux endpoint to investigate Wazuh's event correlation capabilities.
+
+Wazuh correlated eight matching authentication events and generated rule `5712`, a level 10 brute-force alert mapped to MITRE ATT&CK `T1110 — Brute Force`.
+
+During the investigation, I compared the raw Linux authentication logs with Wazuh's `previous_output` and found that the eight-event correlation threshold had been reached after four SSH sessions because each session generated multiple matching events.
+
+**Disposition: True Positive — Benign / Authorised Security Test**
+
+[Read the full investigation](investigations/02-ssh-brute-force.md)
+
 ## Skills I Am Developing
 
 Through this project, I am developing practical experience with:
