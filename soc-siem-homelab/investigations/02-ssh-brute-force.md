@@ -39,7 +39,7 @@ I used incorrect test passwords and did not use any real credentials.
 I reviewed the SSH authentication logs on `ubuntu-lab` using:
 
 ```bash
-sudo journalctl -u ssh --since "30 minutes ago" | grep 'soc-bruteforce-test'
+sudo journalctl -u ssh --since "5 minutes ago" | grep 'soc-bruteforce-test'
 ```
 
 The endpoint recorded repeated events including:
