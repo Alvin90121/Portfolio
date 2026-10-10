@@ -68,7 +68,8 @@ Developed a simulation of robotic manufacturing operations, managing task alloca
 - Multithreading for concurrent operations.
 - Resource allocation and production monitoring.
 
-[View Python Project](https://github.com/Alvin90121/alvinahinakwa/tree/main/files/Python)
+**Project documentation:** Not yet published in this repository.
+<!-- [View Python Project](https://github.com/Alvin90121/alvinahinakwa/tree/main/files/Python)-->
 
 ### 4. Library Management System — Java
 
@@ -81,7 +82,8 @@ Developed a command-line application to manage library operations and demonstrat
 - Overdue fee calculation.
 - Library record management.
 
-[View Java Project](https://github.com/Alvin90121/alvinahinakwa/tree/main/files/Java)
+**Project documentation:** Not yet published in this repository.
+<!--[View Java Project](https://github.com/Alvin90121/alvinahinakwa/tree/main/files/Java)-->
 
 ## Technical Skills
 
