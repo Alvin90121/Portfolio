@@ -52,7 +52,7 @@ Built an isolated virtual network to perform vulnerability discovery and risk as
 - Investigated the MS17-010 SMB vulnerability and its relationship to WannaCry.
 - Evaluated vulnerability severity, business impact and potential remediation.
 
-**Project documentation:** Not yet published in this repository.
+**Project documentation:** University coursework - summary only.
 
 ## Software Development Projects
 
@@ -68,7 +68,7 @@ Developed a simulation of robotic manufacturing operations, managing task alloca
 - Multithreading for concurrent operations.
 - Resource allocation and production monitoring.
 
-**Project documentation:** Not yet published in this repository.
+**Project documentation:** University coursework - summary only.
 <!-- [View Python Project](https://github.com/Alvin90121/alvinahinakwa/tree/main/files/Python)-->
 
 ### 4. Library Management System — Java
@@ -82,7 +82,7 @@ Developed a command-line application to manage library operations and demonstrat
 - Overdue fee calculation.
 - Library record management.
 
-**Project documentation:** Not yet published in this repository.
+**Project documentation:** University coursework - summary only.
 <!--[View Java Project](https://github.com/Alvin90121/alvinahinakwa/tree/main/files/Java)-->
 
 ## Technical Skills
