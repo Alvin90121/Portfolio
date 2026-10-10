@@ -117,7 +117,6 @@ Planned additions include:
 
 - Windows endpoint monitoring
 - Microsoft Sysmon
-- repeated authentication / brute-force detection
 - file integrity monitoring
 - custom Wazuh rules
 - vulnerability monitoring
